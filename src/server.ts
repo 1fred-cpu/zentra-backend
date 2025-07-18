@@ -1,8 +1,10 @@
-import fastify from "fastify";
+import Fastify from "fastify";
 import config from "./plugins/config.js";
 import routes from "./routes/index.js";
 import dbConnector from "./plugins/db-connector";
-const server = fastify({
+import mongoosePlugin from "./plugins/mongoose";
+import userRoutes from "./routes/user-route/user-controller";
+const fastify = Fastify({
     ajv: {
         customOptions: {
             removeAdditional: "all",
@@ -15,9 +17,13 @@ const server = fastify({
     }
 });
 
-await server.register(config);
-await server.register(dbConnector)
-await server.register(routes);
-await server.ready();
+await fastify.register(config);
+//Mongodb connection
+await fastify.register(mongoosePlugin);
+// await fastify.register(dbConnector);
+// user routes endpoints
+await fastify.register(userRoutes, { prefix: "/api/users" });
+await fastify.register(routes);
+await fastify.ready();
 
-export default server;
+export default fastify;
