@@ -1,7 +1,8 @@
 import { signUpUser } from "../user-route/user-handler";
-export default function userController(server, options) {
+import { signUpSchema } from "./schema/sign-up-schema";
+export default function userController(fastify, options) {
     // Method: Post
     // Privacy: Public
     // Url: api/users/create
-    server.post("/create", signUpUser);
+    fastify.post("/create", { schema: signUpSchema }, signUpUser);
 }

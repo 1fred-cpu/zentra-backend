@@ -35,8 +35,10 @@
   "homepage": "https://github.com/yonathan06/fastify-typescript-starter#readme",
   "dependencies": {
     "@fastify/mongodb": "^9.0.2",
+    "@fastify/sensible": "^6.0.3",
     "@sinclair/typebox": "^0.34.9",
     "ajv": "^8.17.1",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.5",
     "env-schema": "^6.0.0",
     "fastify": "^5.1.0",
@@ -47,6 +49,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/mongoose": "^5.11.96",
     "@types/node": "^22.10.1",
     "@typescript-eslint/eslint-plugin": "^8.16.0",
