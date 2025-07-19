@@ -14,10 +14,10 @@ interface SendMailOptions {
     html: string;
 }
 
-export const sendMail = async ({ to, subject, html }: SendMailOptions) => {
+export const sendMail = async ( email, subject, html) => {
     const info = await transporter.sendMail({
         from: `"Zentra" <${process.env.MAIL_USER}>`,
-        to,
+        to: email,
         subject,
         html
     });

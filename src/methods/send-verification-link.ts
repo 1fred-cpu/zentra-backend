@@ -5,7 +5,7 @@ export async function sendVerificationLink(link: string, email: string) {
     const html = `<h2>Verify your Zentra account</h2>
 <p>Thank you for signing up! Please verify your email address by clicking the button below:</p>
 
-<a href="{{verification_link}}" style="display:inline-block;background-color:#4f46e5;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;">
+<a href="${link}" style="display:inline-block;background-color:#4f46e5;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;font-weight:bold;">
   Verify Email
 </a>
 

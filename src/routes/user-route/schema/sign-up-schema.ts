@@ -12,7 +12,7 @@ export const signUpSchema = {
         200: {
             type: "object",
             properties: {
-                message: "string"
+                message: {type: "string"}
             },
             required: ["message"]
         }
