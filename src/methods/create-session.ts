@@ -1,16 +1,13 @@
-import { Types } from "mongoose";
 import SessionModel from "../models/session-model";
 import { signToken } from "../utils/jwt";
 export async function createSession(
-    userId: Types.ObjectId,
-    email: string,
-    name: string
+    userId: string,
+    role: 'user' | 'creator' = 'user',
 ): Promise<string> {
     const session = await SessionModel.create({
-        userId,
-        email,
-        name
+    userId,
+    role
     });
-    const token = await signToken({ userId, email, name });
+    const token = await signToken({ userId, role , sessionId: session._id }, "1d");
     return token
 }

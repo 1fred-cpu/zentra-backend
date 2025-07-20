@@ -1,4 +1,6 @@
-export const signUpSchema = {
+import { FastifySchema } from "fastify";
+
+export const signUpSchema: FastifySchema = {
     body: {
         type: "object",
         properties: {

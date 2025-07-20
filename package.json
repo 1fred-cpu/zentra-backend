@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/yonathan06/fastify-typescript-starter#readme",
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@fastify/mongodb": "^9.0.2",
     "@fastify/sensible": "^6.0.3",
     "@sinclair/typebox": "^0.34.9",

@@ -1,6 +1,24 @@
-import mongoose from "mongoose";
+import mongoose,{Document} from "mongoose";
 
-const UserSchema = new mongoose.Schema({
+export interface User extends Document {
+    name:string;
+    email:string;
+    password:string;
+    emailVerified:boolean;
+    role:'user'|'creator';
+    slug:string;
+    avatar:string;
+    bio:string;
+     socials?: {
+        website: string,
+        twitter: string,
+        dribbble: string,
+        github: string
+    } |  null | undefined,
+    createdAt:Date;
+    updatedAt:Date
+}
+export const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -14,7 +32,8 @@ const UserSchema = new mongoose.Schema({
         lowercase: true
     },
     password: {
-        type: String
+        type: String,
+        default:'none'
     },
     emailVerified: {
         type: Boolean,
@@ -32,15 +51,16 @@ const UserSchema = new mongoose.Schema({
     },
     bio: {
         type: String,
-        maxlength: 300
+        maxlength: 300,
+        default:''
     },
 
     // Fields for "Creators"
     socials: {
-        website: String,
-        twitter: String,
-        dribbble: String,
-        github: String
+        website: {type : String, default:''},
+        twitter: {type : String, default:''},
+        dribbble: {type : String, default:''},
+        github: {type : String, default:''}
     },
 
     createdAt: {

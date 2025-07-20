@@ -6,6 +6,7 @@ import mongoosePlugin from "./plugins/mongoose";
 import sensible from "@fastify/sensible";
 import userRoutes from "./routes/user-route/user-controller";
 import dotenv from "dotenv";
+import fastifyCookie from "@fastify/cookie";
 dotenv.config();
 
 
@@ -25,6 +26,10 @@ const fastify = Fastify({
 await fastify.register(config);
 //Mongodb connection
 await fastify.register(mongoosePlugin);
+ // for signed cookies
+await fastify.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET
+});
 // Http errors methods
 await fastify.register(sensible);
 // await fastify.register(dbConnector);
