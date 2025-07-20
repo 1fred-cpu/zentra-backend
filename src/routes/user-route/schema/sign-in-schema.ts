@@ -1,4 +1,5 @@
 import { FastifySchema } from 'fastify';
+import { access } from 'fs';
 
 export const signInSchema: FastifySchema = {
   body: {
@@ -13,15 +14,9 @@ export const signInSchema: FastifySchema = {
     200: {
       type: 'object',
       properties: {
-        message: { type: 'string' },
-        user: {
-          id: { type: 'string' },
-          email: { type: 'string' },
-          name: { type: 'string' },
-          role: { type: 'string' },
-        },
+        access_token: { type: 'string' },
       },
-      required: ['message', 'user'],
+      required: ['access_token'],
     },
   },
 };

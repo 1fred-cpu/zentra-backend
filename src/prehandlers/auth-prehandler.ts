@@ -24,6 +24,7 @@ export async function authPrehandler(
 
     done();
   } catch (error: any) {
+    if (error.statusCode === 401) throw error;
     // throw fastify.httpErrors.internalServerError('Token verification failed');
     throw error;
   }

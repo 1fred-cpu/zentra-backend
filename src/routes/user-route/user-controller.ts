@@ -24,7 +24,7 @@ export default function userController(fastify: FastifyInstance) {
   // Method: Post
   // Privacy: Private
   // Url: api/users/logout
-  fastify.post('/logout', logoutUserHandler);
+  fastify.post('/logout', { preHandler: authPrehandler }, logoutUserHandler);
 
   // Method: Patch
   // Privacy: Private
