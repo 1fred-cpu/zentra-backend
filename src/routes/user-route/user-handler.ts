@@ -7,8 +7,9 @@ import VerificationLinkModel from '../../models/verification-link-model';
 import UserModel, { User } from '../../models/userModel';
 import { Types } from 'mongoose';
 import { createSession } from '../../methods/create-session';
-import { FastifyRequest, FastifyReply, FastifyError, FastifyErrorCodes } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { getUser } from 'methods/find-user';
+import SessionModel from '../../models/session-model';
 interface SignUpUserBody {
   email: string;
   name: string;
@@ -42,7 +43,7 @@ export async function signUpUser(
     };
   } catch (error: any) {
     if (error.statusCode === 409) throw error;
-    throw error;
+    throw fastify.httpErrors.internalServerError('An unexpected error occurred');
   }
 }
 
@@ -64,7 +65,6 @@ export async function verifyUser(
       userId: new Types.ObjectId(userId),
       secret,
     });
-    fastify.log.info(isLinkActive);
     if (!isLinkActive) {
       throw fastify.httpErrors.forbidden('Sorry verification link is invalid or has expired');
     }
@@ -104,7 +104,7 @@ export async function verifyUser(
     if (error.statusCode === 400) throw error;
     else if (error.statusCode === 403) throw error;
     else if (error.statusCode === 404) throw error;
-    throw error;
+    throw fastify.httpErrors.internalServerError('An unexpected error occurred');
   }
 }
 
@@ -122,6 +122,11 @@ export async function signInUser(
       const link = await generateVerificationLink(user?._id as Types.ObjectId);
       await sendVerificationLink(link, user?.email as string);
       throw fastify.httpErrors.unauthorized('Please verify your email to continue.');
+    }
+    // Checks if user already has a session
+    const existingSession = await SessionModel.findOne({ userId: user?._id });
+    if (existingSession) {
+      throw fastify.httpErrors.unauthorized('You already have an active session.');
     }
     // Create a session for the user
     const jwt = await createSession(user?._id.toString() as string, user?.role);
@@ -146,6 +151,29 @@ export async function signInUser(
     if (error.statusCode === 401) throw error;
     else if (error.statusCode === 403) throw error;
     else if (error.statusCode === 404) throw error;
-    throw error;
+    throw fastify.httpErrors.internalServerError('An unexpected error occurred');
+  }
+}
+
+export interface FastifyRequestWithUser extends FastifyRequest {
+  user?: User;
+}
+
+export async function logoutUser(request: FastifyRequestWithUser, reply: FastifyReply) {
+  try {
+    // Get the user from the request
+    const user = request.user as User;
+    // Delete the session for the user
+    await SessionModel.findOneAndDelete({ userId: user._id });
+    // Clear the JWT token cookie
+    reply.setCookie('token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+    // Return a success message
+    return { message: 'User logged out successfully.' };
+  } catch (error) {
+    throw fastify.httpErrors.internalServerError('An error occurred while logging out.');
   }
 }
