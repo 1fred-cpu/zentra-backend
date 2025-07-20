@@ -38,6 +38,7 @@
     "@fastify/mongodb": "^9.0.2",
     "@fastify/sensible": "^6.0.3",
     "@sinclair/typebox": "^0.34.9",
+    "@supabase/supabase-js": "^2.52.0",
     "ajv": "^8.17.1",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.4.5",

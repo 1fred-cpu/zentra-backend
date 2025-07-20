@@ -13,6 +13,7 @@ export async function getUser(
       throw fastify.httpErrors.notFound('User not found');
     }
     const isPasswordValid = await comparePassword(password as string, user.password);
+    console.log('isPasswordValid', isPasswordValid);
     if (!isPasswordValid) {
       throw fastify.httpErrors.forbidden('Invalid password provided');
     }

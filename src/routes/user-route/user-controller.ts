@@ -1,8 +1,15 @@
 import { FastifyInstance } from 'fastify';
-import { signUpUser, verifyUser, signInUser, logoutUser } from '../user-route/user-handler';
+import {
+  signUpUser,
+  verifyUser,
+  signInUser,
+  logoutUser,
+  updateUser,
+} from '../user-route/user-handler';
 import { signUpSchema } from './schema/sign-up-schema';
 import { verifySchema } from './schema/verify-schema';
 import { signInSchema } from './schema/sign-in-schema';
+import { updateSchema } from './schema/update-schema';
 import { authPrehandler } from 'prehandlers/auth-prehandler';
 export default function userController(fastify: FastifyInstance) {
   // Method: Post
@@ -28,5 +35,9 @@ export default function userController(fastify: FastifyInstance) {
   // Method: Patch
   // Privacy: Private
   // Url: api/users/:userId/update
-  fastify.post('/:userId/update', { preHandler: authPrehandler }, logoutUser);
+  fastify.patch(
+    '/:userId/update',
+    { preHandler: authPrehandler, schema: updateSchema },
+    updateUser,
+  );
 }
