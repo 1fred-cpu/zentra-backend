@@ -3,7 +3,7 @@ import { signUpUser, verifyUser, signInUser, logoutUser } from '../user-route/us
 import { signUpSchema } from './schema/sign-up-schema';
 import { verifySchema } from './schema/verify-schema';
 import { signInSchema } from './schema/sign-in-schema';
-import { authMiddleware } from 'middleware/auth-middleware';
+import { authPrehandler } from 'prehandlers/auth-prehandler';
 export default function userController(fastify: FastifyInstance) {
   // Method: Post
   // Privacy: Public
@@ -23,5 +23,10 @@ export default function userController(fastify: FastifyInstance) {
   // Method: Post
   // Privacy: Private
   // Url: api/users/logout
-  fastify.post('/logout', { preHandler: authMiddleware }, logoutUser);
+  fastify.post('/logout', { preHandler: authPrehandler }, logoutUser);
+
+  // Method: Patch
+  // Privacy: Private
+  // Url: api/users/:userId/update
+  fastify.post('/:userId/update', { preHandler: authPrehandler }, logoutUser);
 }

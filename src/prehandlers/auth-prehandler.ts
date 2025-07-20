@@ -3,9 +3,8 @@ import { FastifyRequestWithUser } from 'routes/user-route/user-handler';
 import { verifyToken } from 'utils/jwt';
 import fastify from 'server';
 import SessionModel from 'models/session-model';
-import { Types } from 'mongoose';
-import { User } from 'models/userModel';
-export async function authMiddleware(
+
+export async function authPrehandler(
   request: FastifyRequestWithUser,
   reply: FastifyReply,
   done: any,

@@ -10,6 +10,7 @@ import { createSession } from '../../methods/create-session';
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { getUser } from 'methods/find-user';
 import SessionModel from '../../models/session-model';
+import { hashPassword } from 'methods/hash';
 interface SignUpUserBody {
   email: string;
   name: string;
@@ -176,5 +177,37 @@ export async function logoutUser(request: FastifyRequestWithUser, reply: Fastify
     return { message: 'User logged out successfully.' };
   } catch (error) {
     throw fastify.httpErrors.internalServerError('An error occurred while logging out.');
+  }
+}
+
+export async function updateUser(
+  request: FastifyRequest<{ Params: { userId: string }; Body: User }>,
+  reply: FastifyReply,
+) {
+  try {
+    let hashedPassword;
+    // Gets user payload from body
+    const payload = request.body;
+    // Gets userId from params
+    const userId = request.params.userId;
+    // Gets user with userId
+    const user = await getUser(userId);
+    // Checks if user want to update password
+    if (payload.password) {
+      hashedPassword = await hashPassword(payload.password);
+    }
+    // Use userId to update the user
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      { ...payload, password: hashedPassword || user?.password },
+      { new: true },
+    ).select('-password');
+
+    if (!updateUser) {
+      throw fastify.httpErrors.notFound('User not found');
+    }
+    return updatedUser;
+  } catch (error: any) {
+    if (error.statusCode === 404) throw error;
   }
 }
