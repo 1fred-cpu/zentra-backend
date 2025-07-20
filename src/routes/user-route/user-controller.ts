@@ -1,9 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import {
-  signUpUser,
-  verifyUser,
-  signInUser,
-  logoutUser,
+  signUpUserHandler,
+  signInUserHandler,
+  logoutUserHandler,
   updateUser,
 } from '../user-route/user-handler';
 import { signUpSchema } from './schema/sign-up-schema';
@@ -15,22 +14,17 @@ export default function userController(fastify: FastifyInstance) {
   // Method: Post
   // Privacy: Public
   // Url: api/users/create
-  fastify.post('/create', { schema: signUpSchema }, signUpUser);
-
-  // Method: Post
-  // Privacy: Public
-  // Url: api/users/verify
-  fastify.post('/verify', { schema: verifySchema }, verifyUser);
+  fastify.post('/create', { schema: signUpSchema }, signUpUserHandler);
 
   // Method: Post
   // Privacy: Public
   // Url: api/users/signin
-  fastify.post('/signin', { schema: signInSchema }, signInUser);
+  fastify.post('/signin', { schema: signInSchema }, signInUserHandler);
 
   // Method: Post
   // Privacy: Private
   // Url: api/users/logout
-  fastify.post('/logout', { preHandler: authPrehandler }, logoutUser);
+  fastify.post('/logout', logoutUserHandler);
 
   // Method: Patch
   // Privacy: Private

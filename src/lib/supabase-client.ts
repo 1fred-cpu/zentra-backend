@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import fastify from 'server';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -16,8 +17,7 @@ export const signUpUser = async (email: string, password: string) => {
     });
     if (error) throw error;
     return data.user;
-  } catch (error) {
-    console.error('Error signing up user:', error);
+  } catch (error: any) {
     throw error;
   }
 };
@@ -30,9 +30,8 @@ export const signInUser = async (email: string, password: string) => {
       password,
     });
     if (error) throw error;
-    return data.user;
+    return data;
   } catch (error) {
-    console.error('Error signing in user:', error);
     throw error;
   }
 };
@@ -56,7 +55,18 @@ export const signOutUser = async () => {
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('Error signing out user:', error);
+    throw error;
+  }
+};
+
+// A method to create a user in the database
+export const createUser = async (user: any) => {
+  try {
+    const { data, error } = await supabase.from('users').insert(user).single();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error creating user:', error);
     throw error;
   }
 };
