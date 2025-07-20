@@ -60,23 +60,22 @@ export async function verifyUser(
       );
     }
     // Check if link is valid
-    const isLinkActive = await VerificationLinkModel.findById({
-      userId,
+    const isLinkActive = await VerificationLinkModel.findOne({
+      userId: new Types.ObjectId(userId),
       secret,
     });
+    fastify.log.info(isLinkActive);
     if (!isLinkActive) {
       throw fastify.httpErrors.forbidden('Sorry verification link is invalid or has expired');
     }
     // Update user emailVerified status
-    const updatedUser = await UserModel.findByIdAndUpdate(
-      userId,
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { _id: new Types.ObjectId(userId) },
       { emailVerified: true },
       { new: true },
     );
     // Delete the verification link after successful verification
-    await VerificationLinkModel.findByIdAndDelete({
-      userId,
-    });
+    await VerificationLinkModel.findByIdAndDelete(isLinkActive._id);
 
     // If user not found, throw an error
     if (!updatedUser) {
