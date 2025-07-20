@@ -138,7 +138,7 @@ export async function signInUser(
       expires: new Date(Date.now() + 86400 * 1000), // 1 day
     });
     // Return a success message
-    return {
+    return reply.status(200).send({
       message: 'User verified successfully.',
       user: {
         id: user?._id.toString(),
@@ -146,7 +146,7 @@ export async function signInUser(
         name: user?.name,
         role: user?.role,
       },
-    };
+    });
   } catch (error: any) {
     if (error.statusCode === 401) throw error;
     else if (error.statusCode === 403) throw error;
@@ -163,6 +163,7 @@ export async function logoutUser(request: FastifyRequestWithUser, reply: Fastify
   try {
     // Get the user from the request
     const user = request.user as User;
+    console.log('User in logout:', user);
     // Delete the session for the user
     await SessionModel.findOneAndDelete({ userId: user._id });
     // Clear the JWT token cookie

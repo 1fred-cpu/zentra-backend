@@ -14,8 +14,14 @@ export const signInSchema: FastifySchema = {
       type: 'object',
       properties: {
         message: { type: 'string' },
+        user: {
+          id: { type: 'string' },
+          email: { type: 'string' },
+          name: { type: 'string' },
+          role: { type: 'string' },
+        },
       },
-      required: ['message'],
+      required: ['message', 'user'],
     },
   },
 };
